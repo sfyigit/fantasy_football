@@ -1,0 +1,125 @@
+services:
+
+  # ── Infrastructure ──────────────────────────────────────────────────────────
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB:       fantasyfootball
+      POSTGRES_USER:     postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d fantasyfootball"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    environment:
+      RABBITMQ_DEFAULT_USER: runegames
+      RABBITMQ_DEFAULT_PASS: runegames567
+    ports:
+      - "5672:5672"
+      - "15672:15672"   # management UI → http://localhost:15672
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  # ── Application services ────────────────────────────────────────────────────
+
+  match-data-ingestion:
+    build:
+      context: .
+      dockerfile: src/MatchDataIngestion/Dockerfile
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      ConnectionStrings__Postgres: "Host=postgres;Port=5432;Database=fantasyfootball;Username=postgres;Password=postgres"
+      RabbitMQ__Host:     rabbitmq
+      RabbitMQ__Port:     "5672"
+      RabbitMQ__Username: guest
+      RabbitMQ__Password: guest
+      MockData__Path:     /mock-data
+    volumes:
+      - ./mock-data:/mock-data:ro
+    restart: on-failure
+
+  match-api:
+    build:
+      context: .
+      dockerfile: src/MatchApi/Dockerfile
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      ConnectionStrings__Postgres: "Host=postgres;Port=5432;Database=fantasyfootball;Username=postgres;Password=postgres"
+      RabbitMQ__Host:     rabbitmq
+      RabbitMQ__Port:     "5672"
+      RabbitMQ__Username: runegames
+      RabbitMQ__Password: runegames567
+      Redis__ConnectionString: "redis:6379"
+      ASPNETCORE_ENVIRONMENT: Development
+    ports:
+      - "8080:8080"
+    restart: on-failure
+
+  scoring-worker:
+    build:
+      context: .
+      dockerfile: src/ScoringWorker/Dockerfile
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      ConnectionStrings__Postgres: "Host=postgres;Port=5432;Database=fantasyfootball;Username=postgres;Password=postgres"
+      RabbitMQ__Host:     rabbitmq
+      RabbitMQ__Port:     "5672"
+      RabbitMQ__Username: runegames
+      RabbitMQ__Password: runegames567
+    restart: on-failure
+
+  leaderboard-worker:
+    build:
+      context: .
+      dockerfile: src/LeaderboardWorker/Dockerfile
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      RabbitMQ__Host:     rabbitmq
+      RabbitMQ__Port:     "5672"
+      RabbitMQ__Username: runegames
+      RabbitMQ__Password: runegames567
+      Redis__ConnectionString: "redis:6379"
+    restart: on-failure
+
+volumes:
+  postgres_data:

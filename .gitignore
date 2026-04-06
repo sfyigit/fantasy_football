@@ -1,0 +1,39 @@
+# Build output
+bin/
+obj/
+
+# .NET user-specific files
+*.user
+*.suo
+*.userprefs
+*.usertasks
+.vs/
+
+# Rider / JetBrains
+.idea/
+*.sln.iml
+
+# NuGet
+*.nupkg
+*.snupkg
+project.lock.json
+packages/
+nuget.config.local
+
+# Environment / secrets
+.env
+.env.*
+appsettings.local.json
+appsettings.*.local.json
+**/secrets.json
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+docker-compose.override.yml
+
+# Logs
+*.log
+logs/
