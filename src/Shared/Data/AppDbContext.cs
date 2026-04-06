@@ -13,6 +13,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<User> Users => Set<User>();
     public DbSet<Squad> Squads => Set<Squad>();
     public DbSet<SquadPlayer> SquadPlayers => Set<SquadPlayer>();
+    public DbSet<PlayerGameweekScore> PlayerGameweekScores => Set<PlayerGameweekScore>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -24,5 +25,12 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             .WithOne()
             .HasForeignKey(sp => sp.SquadId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<PlayerGameweekScore>()
+            .HasIndex(s => s.IdempotencyKey)
+            .IsUnique();
+
+        modelBuilder.Entity<PlayerGameweekScore>()
+            .HasIndex(s => new { s.PlayerId, s.Gameweek });
     }
 }

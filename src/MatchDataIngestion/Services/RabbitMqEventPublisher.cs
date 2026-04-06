@@ -6,7 +6,7 @@ namespace MatchDataIngestion.Services;
 
 public sealed class RabbitMqEventPublisher : IEventPublisher, IAsyncDisposable
 {
-    private const string ExchangeName = "fantasy.events";
+    private static readonly string ExchangeName = MessageBusConstants.Exchange;
 
     private readonly IConnectionFactory _factory;
     private readonly ILogger<RabbitMqEventPublisher> _logger;

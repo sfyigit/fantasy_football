@@ -19,11 +19,15 @@ public record PlayerStatUpdatedEvent(
 );
 
 /// <summary>
-/// Published by ScoringWorker after calculating fantasy points for a player in a gameweek.
+/// Published by ScoringWorker after calculating fantasy points for a player event.
+/// Player-centric: one event per fixture, not per user.
+/// LeaderboardWorker resolves which users own this player (via squad lookup) and updates
+/// the Redis sorted sets accordingly.
+/// IdempotencyKey = Fixture.Id — prevents double-counting if the event is redelivered.
 /// </summary>
 public record ScoreCalculatedEvent(
-    string UserId,
     string PlayerId,
+    string MatchId,
     int Gameweek,
     int Points,
     string IdempotencyKey

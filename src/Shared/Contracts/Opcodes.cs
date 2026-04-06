@@ -91,3 +91,124 @@ public record GetMyRankRequest(
 public record HeartbeatRequest(
     [property: JsonPropertyName("timestamp")] string Timestamp
 );
+
+// ═════════════════════════════════════════════════════════════════════════════
+// Response DTOs  (S → C data payloads, placed in OpcodeResponse.Data)
+// ═════════════════════════════════════════════════════════════════════════════
+
+// ── 1001 GET_MATCHES ──────────────────────────────────────────────────────────
+
+public record GetMatchesResponse(
+    [property: JsonPropertyName("matches")] List<MatchDto> Matches
+);
+
+public record MatchDto(
+    [property: JsonPropertyName("id")]           string Id,
+    [property: JsonPropertyName("home_team_id")] string HomeTeamId,
+    [property: JsonPropertyName("away_team_id")] string AwayTeamId,
+    [property: JsonPropertyName("gameweek")]     int Gameweek,
+    [property: JsonPropertyName("kickoff")]      DateTime Kickoff,
+    [property: JsonPropertyName("status")]       string Status,
+    [property: JsonPropertyName("score")]        MatchScoreDto Score,
+    [property: JsonPropertyName("minute")]       int? Minute
+);
+
+public record MatchScoreDto(
+    [property: JsonPropertyName("home")] int Home,
+    [property: JsonPropertyName("away")] int Away
+);
+
+// ── 1002 SUBSCRIBE_LIVE_SCORE ─────────────────────────────────────────────────
+
+public record SubscribeLiveScoreResponse(
+    [property: JsonPropertyName("subscribed")] bool Subscribed,
+    [property: JsonPropertyName("match_id")]   string MatchId
+);
+
+// ── 1003 UNSUBSCRIBE_LIVE_SCORE ───────────────────────────────────────────────
+
+public record UnsubscribeLiveScoreResponse(
+    [property: JsonPropertyName("unsubscribed")] bool Unsubscribed
+);
+
+// ── 1004 LIVE_SCORE_UPDATE (S→C push) ────────────────────────────────────────
+
+public record LiveScoreUpdateData(
+    [property: JsonPropertyName("match_id")]   string MatchId,
+    [property: JsonPropertyName("minute")]     int? Minute,
+    [property: JsonPropertyName("score")]      MatchScoreDto Score,
+    [property: JsonPropertyName("event_type")] string? EventType,
+    [property: JsonPropertyName("player_id")]  string? PlayerId
+);
+
+// ── 2001 SAVE_SQUAD ───────────────────────────────────────────────────────────
+
+public record SaveSquadResponse(
+    [property: JsonPropertyName("squad_id")]  string SquadId,
+    [property: JsonPropertyName("saved_at")]  DateTime SavedAt
+);
+
+// ── 2002 GET_MY_SCORE ─────────────────────────────────────────────────────────
+
+public record GetMyScoreResponse(
+    [property: JsonPropertyName("total_points")]    int TotalPoints,
+    [property: JsonPropertyName("gameweek_points")] int GameweekPoints,
+    [property: JsonPropertyName("rank")]            long Rank
+);
+
+// ── 2003 GET_PLAYER_STATS ─────────────────────────────────────────────────────
+
+public record GetPlayerStatsResponse(
+    [property: JsonPropertyName("player")]        PlayerDto Player,
+    [property: JsonPropertyName("stats")]         PlayerStatsDto Stats,
+    [property: JsonPropertyName("fantasy_points")] int FantasyPoints
+);
+
+public record PlayerDto(
+    [property: JsonPropertyName("id")]       string Id,
+    [property: JsonPropertyName("name")]     string Name,
+    [property: JsonPropertyName("position")] string Position,
+    [property: JsonPropertyName("team_id")]  string TeamId,
+    [property: JsonPropertyName("price")]    decimal Price
+);
+
+public record PlayerStatsDto(
+    [property: JsonPropertyName("goals")]            int Goals,
+    [property: JsonPropertyName("assists")]          int Assists,
+    [property: JsonPropertyName("yellow_cards")]     int YellowCards,
+    [property: JsonPropertyName("red_cards")]        int RedCards,
+    [property: JsonPropertyName("minutes_played")]   int MinutesPlayed,
+    [property: JsonPropertyName("clean_sheets")]     int CleanSheets,
+    [property: JsonPropertyName("own_goals")]        int OwnGoals,
+    [property: JsonPropertyName("penalties_missed")] int PenaltiesMissed,
+    [property: JsonPropertyName("saves")]            int Saves
+);
+
+// ── 3001 GET_LEADERBOARD ──────────────────────────────────────────────────────
+
+public record GetLeaderboardResponse(
+    [property: JsonPropertyName("entries")]     List<LeaderboardEntryDto> Entries,
+    [property: JsonPropertyName("total_count")] int TotalCount
+);
+
+public record LeaderboardEntryDto(
+    [property: JsonPropertyName("rank")]         long Rank,
+    [property: JsonPropertyName("user_id")]      string UserId,
+    [property: JsonPropertyName("username")]     string Username,
+    [property: JsonPropertyName("total_points")] int TotalPoints
+);
+
+// ── 3002 GET_MY_RANK ──────────────────────────────────────────────────────────
+
+public record GetMyRankResponse(
+    [property: JsonPropertyName("rank")]         long Rank,
+    [property: JsonPropertyName("total_points")] int TotalPoints,
+    [property: JsonPropertyName("percentile")]   double Percentile
+);
+
+// ── 9000 HEARTBEAT ────────────────────────────────────────────────────────────
+
+public record HeartbeatResponse(
+    [property: JsonPropertyName("timestamp")]   string Timestamp,
+    [property: JsonPropertyName("server_time")] string ServerTime
+);
