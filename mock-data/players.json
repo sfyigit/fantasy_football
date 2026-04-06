@@ -1,0 +1,574 @@
+{
+  "players": [
+    {
+      "id": "p-001",
+      "name": "Erling Haaland",
+      "position": "FW",
+      "team_id": "t-001",
+      "price": 13.5,
+      "total_points": 0,
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "yellow_cards": 0,
+        "red_cards": 0,
+        "minutes_played": 0,
+        "clean_sheets": 0,
+        "own_goals": 0,
+        "penalties_missed": 0,
+        "saves": 0
+      }
+    },
+    {
+      "id": "p-002",
+      "name": "Kevin De Bruyne",
+      "position": "MF",
+      "team_id": "t-001",
+      "price": 10.5,
+      "total_points": 0,
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "yellow_cards": 0,
+        "red_cards": 0,
+        "minutes_played": 0,
+        "clean_sheets": 0,
+        "own_goals": 0,
+        "penalties_missed": 0,
+        "saves": 0
+      }
+    },
+    {
+      "id": "p-003",
+      "name": "Rúben Dias",
+      "position": "DF",
+      "team_id": "t-001",
+      "price": 6.5,
+      "total_points": 0,
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "yellow_cards": 0,
+        "red_cards": 0,
+        "minutes_played": 0,
+        "clean_sheets": 0,
+        "own_goals": 0,
+        "penalties_missed": 0,
+        "saves": 0
+      }
+    },
+    {
+      "id": "p-004",
+      "name": "Ederson",
+      "position": "GK",
+      "team_id": "t-001",
+      "price": 5.5,
+      "total_points": 0,
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "yellow_cards": 0,
+        "red_cards": 0,
+        "minutes_played": 0,
+        "clean_sheets": 0,
+        "own_goals": 0,
+        "penalties_missed": 0,
+        "saves": 0
+      }
+    },
+    {
+      "id": "p-005",
+      "name": "Phil Foden",
+      "position": "MF",
+      "team_id": "t-001",
+      "price": 8.5,
+      "total_points": 0,
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "yellow_cards": 0,
+        "red_cards": 0,
+        "minutes_played": 0,
+        "clean_sheets": 0,
+        "own_goals": 0,
+        "penalties_missed": 0,
+        "saves": 0
+      }
+    },
+    {
+      "id": "p-006",
+      "name": "Bukayo Saka",
+      "position": "MF",
+      "team_id": "t-002",
+      "price": 9.0,
+      "total_points": 0,
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "yellow_cards": 0,
+        "red_cards": 0,
+        "minutes_played": 0,
+        "clean_sheets": 0,
+        "own_goals": 0,
+        "penalties_missed": 0,
+        "saves": 0
+      }
+    },
+    {
+      "id": "p-007",
+      "name": "Martin Ødegaard",
+      "position": "MF",
+      "team_id": "t-002",
+      "price": 8.5,
+      "total_points": 0,
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "yellow_cards": 0,
+        "red_cards": 0,
+        "minutes_played": 0,
+        "clean_sheets": 0,
+        "own_goals": 0,
+        "penalties_missed": 0,
+        "saves": 0
+      }
+    },
+    {
+      "id": "p-008",
+      "name": "William Saliba",
+      "position": "DF",
+      "team_id": "t-002",
+      "price": 6.0,
+      "total_points": 0,
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "yellow_cards": 0,
+        "red_cards": 0,
+        "minutes_played": 0,
+        "clean_sheets": 0,
+        "own_goals": 0,
+        "penalties_missed": 0,
+        "saves": 0
+      }
+    },
+    {
+      "id": "p-009",
+      "name": "David Raya",
+      "position": "GK",
+      "team_id": "t-002",
+      "price": 5.0,
+      "total_points": 0,
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "yellow_cards": 0,
+        "red_cards": 0,
+        "minutes_played": 0,
+        "clean_sheets": 0,
+        "own_goals": 0,
+        "penalties_missed": 0,
+        "saves": 0
+      }
+    },
+    {
+      "id": "p-010",
+      "name": "Gabriel Martinelli",
+      "position": "FW",
+      "team_id": "t-002",
+      "price": 7.5,
+      "total_points": 0,
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "yellow_cards": 0,
+        "red_cards": 0,
+        "minutes_played": 0,
+        "clean_sheets": 0,
+        "own_goals": 0,
+        "penalties_missed": 0,
+        "saves": 0
+      }
+    },
+    {
+      "id": "p-011",
+      "name": "Mohamed Salah",
+      "position": "FW",
+      "team_id": "t-003",
+      "price": 13.0,
+      "total_points": 0,
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "yellow_cards": 0,
+        "red_cards": 0,
+        "minutes_played": 0,
+        "clean_sheets": 0,
+        "own_goals": 0,
+        "penalties_missed": 0,
+        "saves": 0
+      }
+    },
+    {
+      "id": "p-012",
+      "name": "Trent Alexander-Arnold",
+      "position": "DF",
+      "team_id": "t-003",
+      "price": 7.5,
+      "total_points": 0,
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "yellow_cards": 0,
+        "red_cards": 0,
+        "minutes_played": 0,
+        "clean_sheets": 0,
+        "own_goals": 0,
+        "penalties_missed": 0,
+        "saves": 0
+      }
+    },
+    {
+      "id": "p-013",
+      "name": "Virgil van Dijk",
+      "position": "DF",
+      "team_id": "t-003",
+      "price": 6.5,
+      "total_points": 0,
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "yellow_cards": 0,
+        "red_cards": 0,
+        "minutes_played": 0,
+        "clean_sheets": 0,
+        "own_goals": 0,
+        "penalties_missed": 0,
+        "saves": 0
+      }
+    },
+    {
+      "id": "p-014",
+      "name": "Alisson",
+      "position": "GK",
+      "team_id": "t-003",
+      "price": 5.5,
+      "total_points": 0,
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "yellow_cards": 0,
+        "red_cards": 0,
+        "minutes_played": 0,
+        "clean_sheets": 0,
+        "own_goals": 0,
+        "penalties_missed": 0,
+        "saves": 0
+      }
+    },
+    {
+      "id": "p-015",
+      "name": "Dominik Szoboszlai",
+      "position": "MF",
+      "team_id": "t-003",
+      "price": 7.0,
+      "total_points": 0,
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "yellow_cards": 0,
+        "red_cards": 0,
+        "minutes_played": 0,
+        "clean_sheets": 0,
+        "own_goals": 0,
+        "penalties_missed": 0,
+        "saves": 0
+      }
+    },
+    {
+      "id": "p-016",
+      "name": "Cole Palmer",
+      "position": "MF",
+      "team_id": "t-004",
+      "price": 10.5,
+      "total_points": 0,
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "yellow_cards": 0,
+        "red_cards": 0,
+        "minutes_played": 0,
+        "clean_sheets": 0,
+        "own_goals": 0,
+        "penalties_missed": 0,
+        "saves": 0
+      }
+    },
+    {
+      "id": "p-017",
+      "name": "Nicolas Jackson",
+      "position": "FW",
+      "team_id": "t-004",
+      "price": 7.5,
+      "total_points": 0,
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "yellow_cards": 0,
+        "red_cards": 0,
+        "minutes_played": 0,
+        "clean_sheets": 0,
+        "own_goals": 0,
+        "penalties_missed": 0,
+        "saves": 0
+      }
+    },
+    {
+      "id": "p-018",
+      "name": "Reece James",
+      "position": "DF",
+      "team_id": "t-004",
+      "price": 6.0,
+      "total_points": 0,
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "yellow_cards": 0,
+        "red_cards": 0,
+        "minutes_played": 0,
+        "clean_sheets": 0,
+        "own_goals": 0,
+        "penalties_missed": 0,
+        "saves": 0
+      }
+    },
+    {
+      "id": "p-019",
+      "name": "Robert Sánchez",
+      "position": "GK",
+      "team_id": "t-004",
+      "price": 4.5,
+      "total_points": 0,
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "yellow_cards": 0,
+        "red_cards": 0,
+        "minutes_played": 0,
+        "clean_sheets": 0,
+        "own_goals": 0,
+        "penalties_missed": 0,
+        "saves": 0
+      }
+    },
+    {
+      "id": "p-020",
+      "name": "Moisés Caicedo",
+      "position": "MF",
+      "team_id": "t-004",
+      "price": 5.5,
+      "total_points": 0,
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "yellow_cards": 0,
+        "red_cards": 0,
+        "minutes_played": 0,
+        "clean_sheets": 0,
+        "own_goals": 0,
+        "penalties_missed": 0,
+        "saves": 0
+      }
+    },
+    {
+      "id": "p-021",
+      "name": "Son Heung-min",
+      "position": "FW",
+      "team_id": "t-005",
+      "price": 9.5,
+      "total_points": 0,
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "yellow_cards": 0,
+        "red_cards": 0,
+        "minutes_played": 0,
+        "clean_sheets": 0,
+        "own_goals": 0,
+        "penalties_missed": 0,
+        "saves": 0
+      }
+    },
+    {
+      "id": "p-022",
+      "name": "James Maddison",
+      "position": "MF",
+      "team_id": "t-005",
+      "price": 7.5,
+      "total_points": 0,
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "yellow_cards": 0,
+        "red_cards": 0,
+        "minutes_played": 0,
+        "clean_sheets": 0,
+        "own_goals": 0,
+        "penalties_missed": 0,
+        "saves": 0
+      }
+    },
+    {
+      "id": "p-023",
+      "name": "Cristian Romero",
+      "position": "DF",
+      "team_id": "t-005",
+      "price": 5.5,
+      "total_points": 0,
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "yellow_cards": 0,
+        "red_cards": 0,
+        "minutes_played": 0,
+        "clean_sheets": 0,
+        "own_goals": 0,
+        "penalties_missed": 0,
+        "saves": 0
+      }
+    },
+    {
+      "id": "p-024",
+      "name": "Guglielmo Vicario",
+      "position": "GK",
+      "team_id": "t-005",
+      "price": 5.0,
+      "total_points": 0,
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "yellow_cards": 0,
+        "red_cards": 0,
+        "minutes_played": 0,
+        "clean_sheets": 0,
+        "own_goals": 0,
+        "penalties_missed": 0,
+        "saves": 0
+      }
+    },
+    {
+      "id": "p-025",
+      "name": "Dejan Kulusevski",
+      "position": "MF",
+      "team_id": "t-005",
+      "price": 7.0,
+      "total_points": 0,
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "yellow_cards": 0,
+        "red_cards": 0,
+        "minutes_played": 0,
+        "clean_sheets": 0,
+        "own_goals": 0,
+        "penalties_missed": 0,
+        "saves": 0
+      }
+    },
+    {
+      "id": "p-026",
+      "name": "Marcus Rashford",
+      "position": "FW",
+      "team_id": "t-006",
+      "price": 8.5,
+      "total_points": 0,
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "yellow_cards": 0,
+        "red_cards": 0,
+        "minutes_played": 0,
+        "clean_sheets": 0,
+        "own_goals": 0,
+        "penalties_missed": 0,
+        "saves": 0
+      }
+    },
+    {
+      "id": "p-027",
+      "name": "Bruno Fernandes",
+      "position": "MF",
+      "team_id": "t-006",
+      "price": 8.5,
+      "total_points": 0,
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "yellow_cards": 0,
+        "red_cards": 0,
+        "minutes_played": 0,
+        "clean_sheets": 0,
+        "own_goals": 0,
+        "penalties_missed": 0,
+        "saves": 0
+      }
+    },
+    {
+      "id": "p-028",
+      "name": "Lisandro Martínez",
+      "position": "DF",
+      "team_id": "t-006",
+      "price": 5.5,
+      "total_points": 0,
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "yellow_cards": 0,
+        "red_cards": 0,
+        "minutes_played": 0,
+        "clean_sheets": 0,
+        "own_goals": 0,
+        "penalties_missed": 0,
+        "saves": 0
+      }
+    },
+    {
+      "id": "p-029",
+      "name": "André Onana",
+      "position": "GK",
+      "team_id": "t-006",
+      "price": 5.0,
+      "total_points": 0,
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "yellow_cards": 0,
+        "red_cards": 0,
+        "minutes_played": 0,
+        "clean_sheets": 0,
+        "own_goals": 0,
+        "penalties_missed": 0,
+        "saves": 0
+      }
+    },
+    {
+      "id": "p-030",
+      "name": "Rasmus Højlund",
+      "position": "FW",
+      "team_id": "t-006",
+      "price": 7.5,
+      "total_points": 0,
+      "stats": {
+        "goals": 0,
+        "assists": 0,
+        "yellow_cards": 0,
+        "red_cards": 0,
+        "minutes_played": 0,
+        "clean_sheets": 0,
+        "own_goals": 0,
+        "penalties_missed": 0,
+        "saves": 0
+      }
+    }
+  ]
+}

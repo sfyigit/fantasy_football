@@ -1,0 +1,25 @@
+{
+  "users": [
+    {
+      "id": "u-001",
+      "username": "koçak_ff",
+      "email": "kocak@example.com",
+      "league_id": "l-001",
+      "total_points": 0
+    },
+    {
+      "id": "u-002",
+      "username": "player2",
+      "email": "p2@example.com",
+      "league_id": "l-001",
+      "total_points": 0
+    },
+    {
+      "id": "u-003",
+      "username": "player3",
+      "email": "p3@example.com",
+      "league_id": "l-001",
+      "total_points": 0
+    }
+  ]
+}

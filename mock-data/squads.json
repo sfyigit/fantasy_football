@@ -1,0 +1,116 @@
+{
+  "squads": [
+    {
+      "id": "sq-001",
+      "user_id": "u-001",
+      "gameweek": 1,
+      "players": [
+        {
+          "player_id": "p-004",
+          "position_slot": "GK",
+          "is_captain": false,
+          "is_vice_captain": false,
+          "is_bench": false
+        },
+        {
+          "player_id": "p-003",
+          "position_slot": "DF",
+          "is_captain": false,
+          "is_vice_captain": false,
+          "is_bench": false
+        },
+        {
+          "player_id": "p-008",
+          "position_slot": "DF",
+          "is_captain": false,
+          "is_vice_captain": false,
+          "is_bench": false
+        },
+        {
+          "player_id": "p-013",
+          "position_slot": "DF",
+          "is_captain": false,
+          "is_vice_captain": false,
+          "is_bench": false
+        },
+        {
+          "player_id": "p-012",
+          "position_slot": "DF",
+          "is_captain": false,
+          "is_vice_captain": false,
+          "is_bench": false
+        },
+        {
+          "player_id": "p-002",
+          "position_slot": "MF",
+          "is_captain": false,
+          "is_vice_captain": true,
+          "is_bench": false
+        },
+        {
+          "player_id": "p-006",
+          "position_slot": "MF",
+          "is_captain": false,
+          "is_vice_captain": false,
+          "is_bench": false
+        },
+        {
+          "player_id": "p-016",
+          "position_slot": "MF",
+          "is_captain": false,
+          "is_vice_captain": false,
+          "is_bench": false
+        },
+        {
+          "player_id": "p-001",
+          "position_slot": "FW",
+          "is_captain": true,
+          "is_vice_captain": false,
+          "is_bench": false
+        },
+        {
+          "player_id": "p-011",
+          "position_slot": "FW",
+          "is_captain": false,
+          "is_vice_captain": false,
+          "is_bench": false
+        },
+        {
+          "player_id": "p-021",
+          "position_slot": "FW",
+          "is_captain": false,
+          "is_vice_captain": false,
+          "is_bench": false
+        },
+        {
+          "player_id": "p-019",
+          "position_slot": "GK",
+          "is_captain": false,
+          "is_vice_captain": false,
+          "is_bench": true
+        },
+        {
+          "player_id": "p-023",
+          "position_slot": "DF",
+          "is_captain": false,
+          "is_vice_captain": false,
+          "is_bench": true
+        },
+        {
+          "player_id": "p-022",
+          "position_slot": "MF",
+          "is_captain": false,
+          "is_vice_captain": false,
+          "is_bench": true
+        },
+        {
+          "player_id": "p-030",
+          "position_slot": "FW",
+          "is_captain": false,
+          "is_vice_captain": false,
+          "is_bench": true
+        }
+      ]
+    }
+  ]
+}

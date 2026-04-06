@@ -1,0 +1,95 @@
+{
+  "matches": [
+    {
+      "id": "m-001",
+      "home_team_id": "t-001",
+      "away_team_id": "t-002",
+      "gameweek": 1,
+      "kickoff": "2025-08-16T15:00:00Z",
+      "status": "scheduled",
+      "score": {
+        "home": 0,
+        "away": 0
+      },
+      "minute": null
+    },
+    {
+      "id": "m-002",
+      "home_team_id": "t-003",
+      "away_team_id": "t-004",
+      "gameweek": 1,
+      "kickoff": "2025-08-16T17:30:00Z",
+      "status": "scheduled",
+      "score": {
+        "home": 0,
+        "away": 0
+      },
+      "minute": null
+    },
+    {
+      "id": "m-003",
+      "home_team_id": "t-005",
+      "away_team_id": "t-006",
+      "gameweek": 1,
+      "kickoff": "2025-08-17T14:00:00Z",
+      "status": "scheduled",
+      "score": {
+        "home": 0,
+        "away": 0
+      },
+      "minute": null
+    },
+    {
+      "id": "m-004",
+      "home_team_id": "t-002",
+      "away_team_id": "t-003",
+      "gameweek": 2,
+      "kickoff": "2025-08-23T15:00:00Z",
+      "status": "scheduled",
+      "score": {
+        "home": 0,
+        "away": 0
+      },
+      "minute": null
+    },
+    {
+      "id": "m-005",
+      "home_team_id": "t-004",
+      "away_team_id": "t-001",
+      "gameweek": 2,
+      "kickoff": "2025-08-23T17:30:00Z",
+      "status": "scheduled",
+      "score": {
+        "home": 0,
+        "away": 0
+      },
+      "minute": null
+    },
+    {
+      "id": "m-006",
+      "home_team_id": "t-006",
+      "away_team_id": "t-005",
+      "gameweek": 2,
+      "kickoff": "2025-08-24T14:00:00Z",
+      "status": "scheduled",
+      "score": {
+        "home": 0,
+        "away": 0
+      },
+      "minute": null
+    },
+    {
+      "id": "m-007",
+      "home_team_id": "t-001",
+      "away_team_id": "t-003",
+      "gameweek": 3,
+      "kickoff": "2025-08-30T15:00:00Z",
+      "status": "live",
+      "score": {
+        "home": 2,
+        "away": 1
+      },
+      "minute": 67
+    }
+  ]
+}

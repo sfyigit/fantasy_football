@@ -1,0 +1,148 @@
+{
+  "fixtures": [
+    {
+      "id": "f-001",
+      "match_id": "m-001",
+      "minute": 12,
+      "type": "goal",
+      "player_id": "p-001",
+      "assist_player_id": "p-002",
+      "team_id": "t-001"
+    },
+    {
+      "id": "f-002",
+      "match_id": "m-001",
+      "minute": 34,
+      "type": "goal",
+      "player_id": "p-006",
+      "assist_player_id": null,
+      "team_id": "t-002"
+    },
+    {
+      "id": "f-003",
+      "match_id": "m-001",
+      "minute": 56,
+      "type": "goal",
+      "player_id": "p-005",
+      "assist_player_id": "p-001",
+      "team_id": "t-001"
+    },
+    {
+      "id": "f-004",
+      "match_id": "m-001",
+      "minute": 78,
+      "type": "goal",
+      "player_id": "p-001",
+      "assist_player_id": "p-005",
+      "team_id": "t-001"
+    },
+    {
+      "id": "f-005",
+      "match_id": "m-001",
+      "minute": 45,
+      "type": "yellow_card",
+      "player_id": "p-008",
+      "assist_player_id": null,
+      "team_id": "t-002"
+    },
+    {
+      "id": "f-006",
+      "match_id": "m-002",
+      "minute": 8,
+      "type": "goal",
+      "player_id": "p-011",
+      "assist_player_id": "p-012",
+      "team_id": "t-003"
+    },
+    {
+      "id": "f-007",
+      "match_id": "m-002",
+      "minute": 22,
+      "type": "goal",
+      "player_id": "p-016",
+      "assist_player_id": null,
+      "team_id": "t-004"
+    },
+    {
+      "id": "f-008",
+      "match_id": "m-002",
+      "minute": 55,
+      "type": "goal",
+      "player_id": "p-017",
+      "assist_player_id": "p-016",
+      "team_id": "t-004"
+    },
+    {
+      "id": "f-009",
+      "match_id": "m-002",
+      "minute": 88,
+      "type": "goal",
+      "player_id": "p-015",
+      "assist_player_id": "p-011",
+      "team_id": "t-003"
+    },
+    {
+      "id": "f-010",
+      "match_id": "m-002",
+      "minute": 60,
+      "type": "red_card",
+      "player_id": "p-020",
+      "assist_player_id": null,
+      "team_id": "t-004"
+    },
+    {
+      "id": "f-011",
+      "match_id": "m-003",
+      "minute": 71,
+      "type": "goal",
+      "player_id": "p-021",
+      "assist_player_id": "p-022",
+      "team_id": "t-005"
+    },
+    {
+      "id": "f-012",
+      "match_id": "m-003",
+      "minute": 33,
+      "type": "yellow_card",
+      "player_id": "p-027",
+      "assist_player_id": null,
+      "team_id": "t-006"
+    },
+    {
+      "id": "f-013",
+      "match_id": "m-007",
+      "minute": 15,
+      "type": "goal",
+      "player_id": "p-001",
+      "assist_player_id": "p-002",
+      "team_id": "t-001"
+    },
+    {
+      "id": "f-014",
+      "match_id": "m-007",
+      "minute": 38,
+      "type": "goal",
+      "player_id": "p-011",
+      "assist_player_id": null,
+      "team_id": "t-003"
+    },
+    {
+      "id": "f-015",
+      "match_id": "m-007",
+      "minute": 62,
+      "type": "goal",
+      "player_id": "p-005",
+      "assist_player_id": "p-001",
+      "team_id": "t-001"
+    },
+    {
+      "id": "f-016",
+      "match_id": "m-007",
+      "minute": 45,
+      "type": "yellow_card",
+      "player_id": "p-013",
+      "assist_player_id": null,
+      "team_id": "t-003"
+    }
+  ]
+}

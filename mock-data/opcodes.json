@@ -1,0 +1,170 @@
+{
+  "opcodes": [
+    {
+      "code": 1001,
+      "name": "GET_MATCHES",
+      "direction": "C->S",
+      "description": "Aktif veya yaklaşan maç listesini döner",
+      "payload_schema": {
+        "gameweek": "int?",
+        "status": "string? (scheduled|live|finished)"
+      },
+      "response_fields": [
+        "matches[]"
+      ]
+    },
+    {
+      "code": 1002,
+      "name": "SUBSCRIBE_LIVE_SCORE",
+      "direction": "C->S",
+      "description": "Belirtilen maç için canlı skor akışına abone olur",
+      "payload_schema": {
+        "match_id": "string"
+      },
+      "response_fields": [
+        "subscribed: bool",
+        "match_id"
+      ]
+    },
+    {
+      "code": 1003,
+      "name": "UNSUBSCRIBE_LIVE_SCORE",
+      "direction": "C->S",
+      "description": "Canlı skor aboneliğini iptal eder",
+      "payload_schema": {
+        "match_id": "string"
+      },
+      "response_fields": [
+        "unsubscribed: bool"
+      ]
+    },
+    {
+      "code": 1004,
+      "name": "LIVE_SCORE_UPDATE",
+      "direction": "S->C",
+      "description": "Sunucudan client'a anlık skor push'u (subscribe sonrası tetiklenir)",
+      "payload_schema": {},
+      "response_fields": [
+        "match_id",
+        "minute",
+        "score",
+        "event_type",
+        "player_id"
+      ]
+    },
+    {
+      "code": 2001,
+      "name": "SAVE_SQUAD",
+      "direction": "C->S",
+      "description": "Kullanıcının haftalık kadrosunu kaydeder (11 oyuncu + 4 yedek)",
+      "payload_schema": {
+        "gameweek": "int",
+        "user_id": "string",
+        "players": "[{player_id, is_captain, is_vice_captain}]"
+      },
+      "response_fields": [
+        "squad_id",
+        "saved_at"
+      ]
+    },
+    {
+      "code": 2002,
+      "name": "GET_MY_SCORE",
+      "direction": "C->S",
+      "description": "Kullanıcının mevcut fantasy puanını döner",
+      "payload_schema": {
+        "user_id": "string",
+        "gameweek": "int?"
+      },
+      "response_fields": [
+        "total_points",
+        "gameweek_points",
+        "rank"
+      ]
+    },
+    {
+      "code": 2003,
+      "name": "GET_PLAYER_STATS",
+      "direction": "C->S",
+      "description": "Belirli bir oyuncunun istatistiklerini döner",
+      "payload_schema": {
+        "player_id": "string",
+        "gameweek": "int?"
+      },
+      "response_fields": [
+        "player",
+        "stats",
+        "fantasy_points"
+      ]
+    },
+    {
+      "code": 3001,
+      "name": "GET_LEADERBOARD",
+      "direction": "C->S",
+      "description": "Genel veya liga bazlı liderlik tablosunu döner",
+      "payload_schema": {
+        "league_id": "string?",
+        "page": "int",
+        "page_size": "int"
+      },
+      "response_fields": [
+        "entries[{rank, user_id, username, total_points}]",
+        "total_count"
+      ]
+    },
+    {
+      "code": 3002,
+      "name": "GET_MY_RANK",
+      "direction": "C->S",
+      "description": "Kullanıcının sıralama bilgisini döner",
+      "payload_schema": {
+        "user_id": "string",
+        "league_id": "string?"
+      },
+      "response_fields": [
+        "rank",
+        "total_points",
+        "percentile"
+      ]
+    },
+    {
+      "code": 9000,
+      "name": "HEARTBEAT",
+      "direction": "C<->S",
+      "description": "Bağlantı canlılık kontrolü",
+      "payload_schema": {
+        "timestamp": "ISO8601"
+      },
+      "response_fields": [
+        "timestamp",
+        "server_time"
+      ]
+    },
+    {
+      "code": 9999,
+      "name": "ERROR",
+      "direction": "S->C",
+      "description": "Hata bildirimi",
+      "payload_schema": {},
+      "response_fields": [
+        "error_code",
+        "message",
+        "original_opcode"
+      ]
+    }
+  ],
+  "envelope": {
+    "request": {
+      "opcode": "int",
+      "requestId": "uuid-v4",
+      "payload": "object"
+    },
+    "response": {
+      "opcode": "int",
+      "requestId": "uuid-v4",
+      "status": "success|error",
+      "data": "object|null",
+      "error": "null|{code,message}"
+    }
+  }
+}

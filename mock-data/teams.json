@@ -1,0 +1,40 @@
+{
+  "teams": [
+    {
+      "id": "t-001",
+      "name": "Manchester City",
+      "short": "MCI",
+      "stadium": "Etihad Stadium"
+    },
+    {
+      "id": "t-002",
+      "name": "Arsenal",
+      "short": "ARS",
+      "stadium": "Emirates Stadium"
+    },
+    {
+      "id": "t-003",
+      "name": "Liverpool",
+      "short": "LIV",
+      "stadium": "Anfield"
+    },
+    {
+      "id": "t-004",
+      "name": "Chelsea",
+      "short": "CHE",
+      "stadium": "Stamford Bridge"
+    },
+    {
+      "id": "t-005",
+      "name": "Tottenham",
+      "short": "TOT",
+      "stadium": "Tottenham Hotspur Stadium"
+    },
+    {
+      "id": "t-006",
+      "name": "Manchester Utd",
+      "short": "MUN",
+      "stadium": "Old Trafford"
+    }
+  ]
+}
