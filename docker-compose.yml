@@ -109,16 +109,27 @@ services:
       context: .
       dockerfile: src/LeaderboardWorker/Dockerfile
     depends_on:
+      postgres:
+        condition: service_healthy
       rabbitmq:
         condition: service_healthy
       redis:
         condition: service_healthy
     environment:
+      ConnectionStrings__Postgres: "Host=postgres;Port=5432;Database=fantasyfootball;Username=postgres;Password=postgres"
       RabbitMQ__Host:     rabbitmq
       RabbitMQ__Port:     "5672"
       RabbitMQ__Username: runegames
       RabbitMQ__Password: runegames567
       Redis__ConnectionString: "redis:6379"
+      ASPNETCORE_URLS: "http://+:8081"
+    ports:
+      - "8081:8081"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8081/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     restart: on-failure
 
 volumes:
