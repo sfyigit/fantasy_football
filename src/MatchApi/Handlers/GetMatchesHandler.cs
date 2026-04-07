@@ -1,4 +1,5 @@
 using System.Net.WebSockets;
+using MatchApi.Auth;
 using MatchApi.Dispatcher;
 using Microsoft.EntityFrameworkCore;
 using Shared.Contracts;
@@ -11,7 +12,7 @@ public class GetMatchesHandler(IServiceScopeFactory scopeFactory) : IOpcodeHandl
 {
     public int Opcode => Shared.Contracts.Opcode.GetMatches;
 
-    public async Task<OpcodeResponse> HandleAsync(OpcodeRequest request, WebSocket? ws, CancellationToken ct)
+    public async Task<OpcodeResponse> HandleAsync(OpcodeRequest request, WebSocket? ws, AuthContext? auth, CancellationToken ct)
     {
         var req = request.Payload.Deserialize<GetMatchesRequest>(ApiJsonOptions.Options);
 

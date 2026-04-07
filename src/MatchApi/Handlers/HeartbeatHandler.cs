@@ -1,4 +1,5 @@
 using System.Net.WebSockets;
+using MatchApi.Auth;
 using MatchApi.Dispatcher;
 using Shared.Contracts;
 
@@ -9,7 +10,7 @@ public class HeartbeatHandler : IOpcodeHandler
 {
     public int Opcode => Shared.Contracts.Opcode.Heartbeat;
 
-    public Task<OpcodeResponse> HandleAsync(OpcodeRequest request, WebSocket? ws, CancellationToken ct)
+    public Task<OpcodeResponse> HandleAsync(OpcodeRequest request, WebSocket? ws, AuthContext? auth, CancellationToken ct)
     {
         var req = request.Payload.Deserialize<HeartbeatRequest>(ApiJsonOptions.Options);
         var response = OpcodeResponse.Ok(request.Opcode, request.RequestId, new HeartbeatResponse(

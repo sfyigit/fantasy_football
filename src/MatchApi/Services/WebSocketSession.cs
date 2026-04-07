@@ -1,5 +1,5 @@
 using System.Net.WebSockets;
-using System.Text.Json;
+using MatchApi.Auth;
 using MatchApi.Dispatcher;
 using Shared.Contracts;
 
@@ -7,20 +7,22 @@ namespace MatchApi.Services;
 
 /// <summary>
 /// Manages the full lifecycle of a single WebSocket connection:
-///   - Receive loop: deserialise → dispatch → send response
+///   - JWT identity extracted once from the HTTP upgrade handshake headers
+///   - Receive loop: deserialise → dispatch (with auth context) → send response
 ///   - Teardown: unregister all subscriptions on disconnect
 /// </summary>
 public class WebSocketSession(
     WebSocket ws,
     OpcodeDispatcher dispatcher,
     SubscriptionManager subscriptions,
+    AuthContext? auth,
     ILogger<WebSocketSession> logger)
 {
     private static readonly JsonSerializerOptions JsonOpts = ApiJsonOptions.Options;
 
     public async Task RunAsync(CancellationToken ct)
     {
-        logger.LogInformation("WebSocket session started");
+        logger.LogInformation("WebSocket session started user={UserId}", auth?.UserId ?? "anonymous");
         var buffer = new byte[8192];
 
         try
@@ -67,8 +69,8 @@ public class WebSocketSession(
                     continue;
                 }
 
-                // ── Dispatch ──────────────────────────────────────────────────
-                var response = await dispatcher.DispatchAsync(request, ws, ct);
+                // ── Dispatch (auth context is fixed for the lifetime of this WS session)
+                var response = await dispatcher.DispatchAsync(request, ws, auth, ct);
                 await SendAsync(response, ct);
             }
         }
@@ -80,7 +82,7 @@ public class WebSocketSession(
         finally
         {
             subscriptions.UnregisterAll(ws);
-            logger.LogInformation("WebSocket session ended");
+            logger.LogInformation("WebSocket session ended user={UserId}", auth?.UserId ?? "anonymous");
         }
     }
 

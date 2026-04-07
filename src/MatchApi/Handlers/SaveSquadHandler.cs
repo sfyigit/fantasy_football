@@ -1,4 +1,5 @@
 using System.Net.WebSockets;
+using MatchApi.Auth;
 using MatchApi.Dispatcher;
 using Microsoft.EntityFrameworkCore;
 using Shared.Contracts;
@@ -9,19 +10,22 @@ namespace MatchApi.Handlers;
 
 /// <summary>
 /// Opcode 2001 SAVE_SQUAD — upserts the weekly fantasy squad for a user.
-/// Existing squad players for the same userId + gameweek are replaced atomically.
+/// userId is sourced from the verified JWT claim (not the payload).
 /// </summary>
-public class SaveSquadHandler(IServiceScopeFactory scopeFactory) : IOpcodeHandler
+public class SaveSquadHandler(IServiceScopeFactory scopeFactory) : IOpcodeHandler, IAuthenticatedHandler
 {
     public int Opcode => Shared.Contracts.Opcode.SaveSquad;
 
-    public async Task<OpcodeResponse> HandleAsync(OpcodeRequest request, WebSocket? ws, CancellationToken ct)
+    public async Task<OpcodeResponse> HandleAsync(OpcodeRequest request, WebSocket? ws, AuthContext? auth, CancellationToken ct)
     {
+        // auth is guaranteed non-null by OpcodeDispatcher for IAuthenticatedHandler
+        var userId = auth!.UserId;
+
         var req = request.Payload.Deserialize<SaveSquadRequest>(ApiJsonOptions.Options);
 
-        if (req is null || string.IsNullOrEmpty(req.UserId))
+        if (req is null)
             return OpcodeResponse.Fail(request.Opcode, request.RequestId,
-                "INVALID_PAYLOAD", "user_id and players are required");
+                "INVALID_PAYLOAD", "players and gameweek are required");
 
         if (req.Players is null || req.Players.Count == 0)
             return OpcodeResponse.Fail(request.Opcode, request.RequestId,
@@ -32,13 +36,13 @@ public class SaveSquadHandler(IServiceScopeFactory scopeFactory) : IOpcodeHandle
 
         var existing = await db.Squads
             .Include(s => s.Players)
-            .FirstOrDefaultAsync(s => s.UserId == req.UserId && s.Gameweek == req.Gameweek, ct);
+            .FirstOrDefaultAsync(s => s.UserId == userId && s.Gameweek == req.Gameweek, ct);
 
         string squadId;
         if (existing is null)
         {
             squadId  = Guid.NewGuid().ToString();
-            existing = new Squad { Id = squadId, UserId = req.UserId, Gameweek = req.Gameweek };
+            existing = new Squad { Id = squadId, UserId = userId, Gameweek = req.Gameweek };
             db.Squads.Add(existing);
         }
         else
@@ -52,12 +56,12 @@ public class SaveSquadHandler(IServiceScopeFactory scopeFactory) : IOpcodeHandle
         {
             existing.Players.Add(new SquadPlayer
             {
-                SquadId      = squadId,
-                PlayerId     = p.PlayerId,
-                PositionSlot = p.PositionSlot,
-                IsCaptain    = p.IsCaptain,
+                SquadId       = squadId,
+                PlayerId      = p.PlayerId,
+                PositionSlot  = p.PositionSlot,
+                IsCaptain     = p.IsCaptain,
                 IsViceCaptain = p.IsViceCaptain,
-                IsBench      = p.IsBench
+                IsBench       = p.IsBench
             });
         }
 

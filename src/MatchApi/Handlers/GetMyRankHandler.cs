@@ -1,4 +1,5 @@
 using System.Net.WebSockets;
+using MatchApi.Auth;
 using MatchApi.Dispatcher;
 using Shared.Contracts;
 using Shared.Messaging;
@@ -7,44 +8,41 @@ using StackExchange.Redis;
 namespace MatchApi.Handlers;
 
 /// <summary>
-/// Opcode 3002 GET_MY_RANK — returns the requesting user's rank, total points, and percentile
-/// from the Redis Sorted Set (global or league-scoped).
+/// Opcode 3002 GET_MY_RANK — returns the requesting user's rank, total points, and percentile.
+/// userId is sourced from the verified JWT claim (not the payload).
 /// </summary>
-public class GetMyRankHandler(IConnectionMultiplexer redis) : IOpcodeHandler
+public class GetMyRankHandler(IConnectionMultiplexer redis) : IOpcodeHandler, IAuthenticatedHandler
 {
     public int Opcode => Shared.Contracts.Opcode.GetMyRank;
 
-    public async Task<OpcodeResponse> HandleAsync(OpcodeRequest request, WebSocket? ws, CancellationToken ct)
+    public async Task<OpcodeResponse> HandleAsync(OpcodeRequest request, WebSocket? ws, AuthContext? auth, CancellationToken ct)
     {
+        var userId = auth!.UserId;
+
         var req = request.Payload.Deserialize<GetMyRankRequest>(ApiJsonOptions.Options);
 
-        if (req is null || string.IsNullOrEmpty(req.UserId))
-            return OpcodeResponse.Fail(request.Opcode, request.RequestId,
-                "MISSING_USER_ID", "user_id is required");
-
-        var key = req.LeagueId is null
+        var key = req?.LeagueId is null
             ? RedisKeys.GlobalLeaderboard
             : RedisKeys.LeagueLeaderboard(req.LeagueId);
 
         var db = redis.GetDatabase();
 
-        // Run all three Redis commands concurrently
-        var rankTask  = db.SortedSetRankAsync(key, req.UserId, Order.Descending);
-        var scoreTask = db.SortedSetScoreAsync(key, req.UserId);
+        var rankTask  = db.SortedSetRankAsync(key, userId, Order.Descending);
+        var scoreTask = db.SortedSetScoreAsync(key, userId);
         var countTask = db.SortedSetLengthAsync(key);
 
         await Task.WhenAll(rankTask, scoreTask, countTask);
 
-        long? rank  = rankTask.Result;
+        long?   rank  = rankTask.Result;
         double? score = scoreTask.Result;
-        long total  = countTask.Result;
+        long    total = countTask.Result;
 
         if (!rank.HasValue)
             return OpcodeResponse.Fail(request.Opcode, request.RequestId,
-                "USER_NOT_RANKED", $"User {req.UserId} has no score on the leaderboard");
+                "USER_NOT_RANKED", $"User {userId} has no score on the leaderboard");
 
-        long rank1Based = rank.Value + 1;
-        double percentile = total > 0
+        long   rank1Based  = rank.Value + 1;
+        double percentile  = total > 0
             ? Math.Round((double)(total - rank.Value) / total * 100.0, 2)
             : 0.0;
 

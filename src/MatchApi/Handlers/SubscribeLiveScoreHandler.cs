@@ -1,4 +1,5 @@
 using System.Net.WebSockets;
+using MatchApi.Auth;
 using MatchApi.Dispatcher;
 using MatchApi.Services;
 using Shared.Contracts;
@@ -13,7 +14,7 @@ public class SubscribeLiveScoreHandler(SubscriptionManager subscriptions) : IOpc
 {
     public int Opcode => Shared.Contracts.Opcode.SubscribeLiveScore;
 
-    public Task<OpcodeResponse> HandleAsync(OpcodeRequest request, WebSocket? ws, CancellationToken ct)
+    public Task<OpcodeResponse> HandleAsync(OpcodeRequest request, WebSocket? ws, AuthContext? auth, CancellationToken ct)
     {
         var req = request.Payload.Deserialize<SubscribeLiveScoreRequest>(ApiJsonOptions.Options);
 

@@ -1,4 +1,5 @@
 using System.Net.WebSockets;
+using MatchApi.Auth;
 using MatchApi.Dispatcher;
 using Microsoft.EntityFrameworkCore;
 using Shared.Contracts;
@@ -10,27 +11,23 @@ namespace MatchApi.Handlers;
 
 /// <summary>
 /// Opcode 2002 GET_MY_SCORE — returns a user's total and gameweek fantasy points.
-///
-/// Gameweek points are computed by joining the user's squad (with captain flag) against
-/// PlayerGameweekScore rows. Captain's points are doubled. Global rank is read from Redis.
+/// userId is sourced from the verified JWT claim (not the payload).
 /// </summary>
-public class GetMyScoreHandler(IServiceScopeFactory scopeFactory, IConnectionMultiplexer redis) : IOpcodeHandler
+public class GetMyScoreHandler(IServiceScopeFactory scopeFactory, IConnectionMultiplexer redis) : IOpcodeHandler, IAuthenticatedHandler
 {
     public int Opcode => Shared.Contracts.Opcode.GetMyScore;
 
-    public async Task<OpcodeResponse> HandleAsync(OpcodeRequest request, WebSocket? ws, CancellationToken ct)
+    public async Task<OpcodeResponse> HandleAsync(OpcodeRequest request, WebSocket? ws, AuthContext? auth, CancellationToken ct)
     {
-        var req = request.Payload.Deserialize<GetMyScoreRequest>(ApiJsonOptions.Options);
+        var userId = auth!.UserId;
 
-        if (req is null || string.IsNullOrEmpty(req.UserId))
-            return OpcodeResponse.Fail(request.Opcode, request.RequestId,
-                "MISSING_USER_ID", "user_id is required");
+        var req = request.Payload.Deserialize<GetMyScoreRequest>(ApiJsonOptions.Options);
 
         await using var scope = scopeFactory.CreateAsyncScope();
         var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
-        // Use the requested gameweek, or fall back to the latest active gameweek
-        int gameweek = req.Gameweek ?? await db.Matches
+        // Use the requested gameweek, or fall back to the earliest live/scheduled one
+        int gameweek = req?.Gameweek ?? await db.Matches
             .Where(m => m.Status == "live" || m.Status == "scheduled")
             .Select(m => m.Gameweek)
             .OrderBy(g => g)
@@ -38,14 +35,14 @@ public class GetMyScoreHandler(IServiceScopeFactory scopeFactory, IConnectionMul
 
         var squad = await db.Squads
             .Include(s => s.Players)
-            .FirstOrDefaultAsync(s => s.UserId == req.UserId && s.Gameweek == gameweek, ct);
+            .FirstOrDefaultAsync(s => s.UserId == userId && s.Gameweek == gameweek, ct);
 
         if (squad is null)
             return OpcodeResponse.Fail(request.Opcode, request.RequestId,
-                "SQUAD_NOT_FOUND", $"No squad found for user {req.UserId} in gameweek {gameweek}");
+                "SQUAD_NOT_FOUND", $"No squad found for user {userId} in gameweek {gameweek}");
 
-        var activePlayerIds  = squad.Players.Where(p => !p.IsBench).Select(p => p.PlayerId).ToList();
-        var captainPlayerId  = squad.Players.FirstOrDefault(p => p.IsCaptain)?.PlayerId;
+        var activePlayerIds = squad.Players.Where(p => !p.IsBench).Select(p => p.PlayerId).ToList();
+        var captainPlayerId = squad.Players.FirstOrDefault(p => p.IsCaptain)?.PlayerId;
 
         var scores = await db.PlayerGameweekScores
             .Where(s => activePlayerIds.Contains(s.PlayerId) && s.Gameweek == gameweek)
@@ -58,10 +55,9 @@ public class GetMyScoreHandler(IServiceScopeFactory scopeFactory, IConnectionMul
             gameweekPoints += pts;
         }
 
-        // Global rank and total score from Redis
         var redisDb    = redis.GetDatabase();
-        long?   rank   = await redisDb.SortedSetRankAsync(RedisKeys.GlobalLeaderboard, req.UserId, Order.Descending);
-        double? rScore = await redisDb.SortedSetScoreAsync(RedisKeys.GlobalLeaderboard, req.UserId);
+        long?   rank   = await redisDb.SortedSetRankAsync(RedisKeys.GlobalLeaderboard, userId, Order.Descending);
+        double? rScore = await redisDb.SortedSetScoreAsync(RedisKeys.GlobalLeaderboard, userId);
 
         return OpcodeResponse.Ok(request.Opcode, request.RequestId, new GetMyScoreResponse(
             TotalPoints:    (int)(rScore ?? 0),

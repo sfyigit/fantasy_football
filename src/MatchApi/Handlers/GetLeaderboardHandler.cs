@@ -1,4 +1,5 @@
 using System.Net.WebSockets;
+using MatchApi.Auth;
 using MatchApi.Dispatcher;
 using Microsoft.EntityFrameworkCore;
 using Shared.Contracts;
@@ -16,7 +17,7 @@ public class GetLeaderboardHandler(IConnectionMultiplexer redis, IServiceScopeFa
 {
     public int Opcode => Shared.Contracts.Opcode.GetLeaderboard;
 
-    public async Task<OpcodeResponse> HandleAsync(OpcodeRequest request, WebSocket? ws, CancellationToken ct)
+    public async Task<OpcodeResponse> HandleAsync(OpcodeRequest request, WebSocket? ws, AuthContext? auth, CancellationToken ct)
     {
         var req = request.Payload.Deserialize<GetLeaderboardRequest>(ApiJsonOptions.Options);
 
