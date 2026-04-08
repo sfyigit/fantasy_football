@@ -1,6 +1,6 @@
 # Fantasy Football Match Day Engine
 
-Petrolig .NET Backend Developer case çalışması. .NET 9 · PostgreSQL 16 · Redis 7 · RabbitMQ 3 · Docker Compose
+.NET 9 · PostgreSQL 16 · Redis 7 · RabbitMQ 3 · Docker Compose
 
 ---
 
@@ -16,7 +16,7 @@ docker compose logs -f match-data-ingestion   # 60 sn içinde fixture akışı b
 |---|---|
 | MatchApi | http://localhost:8080 |
 | Swagger UI | http://localhost:8080/swagger |
-| RabbitMQ Management | http://localhost:15672 (`runegames` / `runegames567`) |
+| RabbitMQ Management | http://localhost:15672 (`footballgame` / `footballgame567`) |
 | MatchDataIngestion health | http://localhost:8082/health |
 | ScoringWorker health | http://localhost:8083/health |
 | LeaderboardWorker health | http://localhost:8081/health |
