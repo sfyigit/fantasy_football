@@ -1,0 +1,14 @@
+**/bin/
+**/obj/
+**/.vs/
+**/.vscode/
+**/.idea/
+**/*.user
+**/.git/
+**/.gitignore
+**/.dockerignore
+**/Dockerfile
+**/node_modules/
+**/TestResults/
+.claude/
+*.md

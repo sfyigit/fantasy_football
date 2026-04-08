@@ -8,8 +8,11 @@ namespace MatchApi.Services;
 /// <summary>
 /// Manages the full lifecycle of a single WebSocket connection:
 ///   - JWT identity extracted once from the HTTP upgrade handshake headers
-///   - Receive loop: deserialise → dispatch (with auth context) → send response
+///   - Receive loop: deserialise → rate-limit check → dispatch (with auth context) → send response
 ///   - Teardown: unregister all subscriptions on disconnect
+///
+/// Per-session rate limit: 120 messages / minute (fixed window). Heartbeat opcode (9000)
+/// is excluded from the count so keep-alive frames never consume quota.
 /// </summary>
 public class WebSocketSession(
     WebSocket ws,
@@ -19,6 +22,33 @@ public class WebSocketSession(
     ILogger<WebSocketSession> logger)
 {
     private static readonly JsonSerializerOptions JsonOpts = ApiJsonOptions.Options;
+
+    // ── Per-session fixed-window rate limiter ────────────────────────────────
+    private const int RateLimitPerWindow = 120;
+    private static readonly TimeSpan RateLimitWindow = TimeSpan.FromMinutes(1);
+
+    private int  _windowCount;
+    private long _windowStartTicks = DateTime.UtcNow.Ticks;
+
+    /// <summary>
+    /// Returns true and increments the counter if the message is within quota.
+    /// Heartbeat (9000) is never counted.
+    /// </summary>
+    private bool TryConsumeRateLimit(int opcode)
+    {
+        if (opcode == Opcode.Heartbeat) return true;
+
+        var now = DateTime.UtcNow.Ticks;
+        if (now - _windowStartTicks >= RateLimitWindow.Ticks)
+        {
+            _windowCount      = 0;
+            _windowStartTicks = now;
+        }
+
+        if (_windowCount >= RateLimitPerWindow) return false;
+        _windowCount++;
+        return true;
+    }
 
     public async Task RunAsync(CancellationToken ct)
     {
@@ -66,6 +96,16 @@ public class WebSocketSession(
                     await SendAsync(OpcodeResponse.Fail(
                         Opcode.Error, Guid.NewGuid().ToString(),
                         "NULL_REQUEST", "Request was null"), ct);
+                    continue;
+                }
+
+                // ── Per-session rate limit ────────────────────────────────────
+                if (!TryConsumeRateLimit(request.Opcode))
+                {
+                    logger.LogWarning("Rate limit exceeded for session user={UserId}", auth?.UserId ?? "anonymous");
+                    await SendAsync(OpcodeResponse.Fail(
+                        Opcode.Error, request.RequestId,
+                        "RATE_LIMIT_EXCEEDED", $"Too many messages. Limit: {RateLimitPerWindow} per minute."), ct);
                     continue;
                 }
 

@@ -5,13 +5,13 @@ using RabbitMQ.Client;
 using Shared.Data;
 using Shared.Messaging;
 
-var builder = Host.CreateApplicationBuilder(args);
+var builder = WebApplication.CreateBuilder(args);
 
-// PostgreSQL via EF Core
+// ── PostgreSQL via EF Core ────────────────────────────────────────────────────
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("Postgres")));
 
-// RabbitMQ connection factory (singleton — channel is created lazily per publisher instance)
+// ── RabbitMQ ──────────────────────────────────────────────────────────────────
 builder.Services.AddSingleton<IConnectionFactory>(_ => new ConnectionFactory
 {
     HostName = builder.Configuration["RabbitMQ:Host"]     ?? "localhost",
@@ -21,16 +21,35 @@ builder.Services.AddSingleton<IConnectionFactory>(_ => new ConnectionFactory
 });
 
 builder.Services.AddSingleton<IEventPublisher, RabbitMqEventPublisher>();
-
 builder.Services.AddHostedService<Worker>();
+builder.Services.AddHostedService<OutboxRelayService>();
 
-var host = builder.Build();
+// ── Health checks ─────────────────────────────────────────────────────────────
+builder.Services.AddHealthChecks()
+    .AddCheck("self", () => Microsoft.Extensions.Diagnostics.HealthChecks.HealthCheckResult.Healthy());
+
+var app = builder.Build();
 
 // Apply pending EF Core migrations on startup
-using (var scope = host.Services.CreateScope())
+using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     await db.Database.MigrateAsync();
 }
 
-host.Run();
+app.MapHealthChecks("/health");
+
+app.MapGet("/ready", async (AppDbContext db) =>
+{
+    try
+    {
+        await db.Database.CanConnectAsync();
+        return Results.Ok(new { status = "ready" });
+    }
+    catch (Exception ex)
+    {
+        return Results.Problem(ex.Message, statusCode: StatusCodes.Status503ServiceUnavailable);
+    }
+});
+
+app.Run();

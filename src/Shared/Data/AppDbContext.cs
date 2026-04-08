@@ -14,6 +14,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<Squad> Squads => Set<Squad>();
     public DbSet<SquadPlayer> SquadPlayers => Set<SquadPlayer>();
     public DbSet<PlayerGameweekScore> PlayerGameweekScores => Set<PlayerGameweekScore>();
+    public DbSet<OutboxMessage> OutboxMessages => Set<OutboxMessage>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -32,5 +33,9 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
 
         modelBuilder.Entity<PlayerGameweekScore>()
             .HasIndex(s => new { s.PlayerId, s.Gameweek });
+
+        // Outbox: index on pending rows only for efficient relay polling
+        modelBuilder.Entity<OutboxMessage>()
+            .HasIndex(o => o.PublishedAt);
     }
 }

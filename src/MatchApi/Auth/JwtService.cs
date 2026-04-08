@@ -16,7 +16,7 @@ public class JwtService
     private readonly string _issuer;
     private readonly string _audience;
     private readonly int _expiresInSeconds;
-    private readonly JwtSecurityTokenHandler _handler = new();
+    private readonly JwtSecurityTokenHandler _handler = new() { MapInboundClaims = false };
     private readonly TokenValidationParameters _validationParams;
 
     public JwtService(IConfiguration config)

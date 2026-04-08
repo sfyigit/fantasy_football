@@ -3,15 +3,16 @@ using Microsoft.EntityFrameworkCore;
 using Shared.Data;
 using Shared.Domain.Entities;
 using Shared.Domain.Events;
-using Shared.Messaging;
 using Shared.MockData;
 
 namespace MatchDataIngestion;
 
+// Outbox pattern: events are written to OutboxMessages in the same DB transaction
+// as the Fixture insert. OutboxRelayService publishes them asynchronously.
+
 public class Worker(
     ILogger<Worker> logger,
     IServiceScopeFactory scopeFactory,
-    IEventPublisher publisher,
     IConfiguration configuration
 ) : BackgroundService
 {
@@ -155,7 +156,7 @@ public class Worker(
 
     // ── Matches ───────────────────────────────────────────────────────────────
 
-    private async Task UpsertMatchesAsync(AppDbContext db, MatchesJson data, CancellationToken ct)
+    private static async Task UpsertMatchesAsync(AppDbContext db, MatchesJson data, CancellationToken ct)
     {
         foreach (var m in data.Matches)
         {
@@ -170,8 +171,8 @@ public class Worker(
                     Minute = m.Minute
                 });
 
-                await publisher.PublishAsync(new MatchUpdatedEvent(
-                    m.Id, m.Status, m.Score.Home, m.Score.Away, m.Minute), ct);
+                EnqueueOutbox(db, new MatchUpdatedEvent(
+                    m.Id, m.Status, m.Score.Home, m.Score.Away, m.Minute));
             }
             else
             {
@@ -187,8 +188,8 @@ public class Worker(
 
                 if (changed)
                 {
-                    await publisher.PublishAsync(new MatchUpdatedEvent(
-                        m.Id, m.Status, m.Score.Home, m.Score.Away, m.Minute), ct);
+                    EnqueueOutbox(db, new MatchUpdatedEvent(
+                        m.Id, m.Status, m.Score.Home, m.Score.Away, m.Minute));
                 }
             }
         }
@@ -201,6 +202,8 @@ public class Worker(
     /// <summary>
     /// Each fixture's <c>id</c> (e.g. "f-001") is the idempotency key.
     /// If a row with that ID already exists the event has already been processed — skip.
+    /// The PlayerStatUpdatedEvent is written to the Outbox in the same transaction as the
+    /// Fixture insert (Transactional Outbox pattern) — eliminating the dual-write risk.
     /// </summary>
     private async Task ProcessFixturesAsync(AppDbContext db, FixturesJson data, CancellationToken ct)
     {
@@ -216,12 +219,12 @@ public class Worker(
                 AssistPlayerId = f.AssistPlayerId, TeamId = f.TeamId
             });
 
-            await publisher.PublishAsync(new PlayerStatUpdatedEvent(
-                PlayerId: f.PlayerId,
-                MatchId: f.MatchId,
-                EventType: f.Type,
-                IdempotencyKey: f.Id
-            ), ct);
+            // Write to outbox — same transaction, no dual-write risk
+            EnqueueOutbox(db, new PlayerStatUpdatedEvent(
+                PlayerId:       f.PlayerId,
+                MatchId:        f.MatchId,
+                EventType:      f.Type,
+                IdempotencyKey: f.Id));
 
             logger.LogInformation(
                 "New fixture {FixtureId}: {Type} by player {PlayerId} in match {MatchId}",
@@ -229,6 +232,21 @@ public class Worker(
         }
 
         await db.SaveChangesAsync(ct);
+    }
+
+    // ── Outbox helper ─────────────────────────────────────────────────────────
+
+    private static readonly JsonSerializerOptions JsonOpts = new();
+
+    private static void EnqueueOutbox<T>(AppDbContext db, T @event) where T : class
+    {
+        db.OutboxMessages.Add(new Shared.Domain.Entities.OutboxMessage
+        {
+            EventType  = typeof(T).Name,
+            Payload    = JsonSerializer.Serialize(@event, JsonOpts),
+            RoutingKey = typeof(T).Name,
+            CreatedAt  = DateTime.UtcNow
+        });
     }
 
     // ── Users ─────────────────────────────────────────────────────────────────

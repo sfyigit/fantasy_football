@@ -57,11 +57,19 @@ services:
       ConnectionStrings__Postgres: "Host=postgres;Port=5432;Database=fantasyfootball;Username=postgres;Password=postgres"
       RabbitMQ__Host:     rabbitmq
       RabbitMQ__Port:     "5672"
-      RabbitMQ__Username: guest
-      RabbitMQ__Password: guest
+      RabbitMQ__Username: runegames
+      RabbitMQ__Password: runegames567
       MockData__Path:     /mock-data
+      ASPNETCORE_URLS:    "http://+:8082"
+    ports:
+      - "8082:8082"
     volumes:
       - ./mock-data:/mock-data:ro
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8082/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     restart: on-failure
 
   match-api:
@@ -106,6 +114,14 @@ services:
       RabbitMQ__Port:     "5672"
       RabbitMQ__Username: runegames
       RabbitMQ__Password: runegames567
+      ASPNETCORE_URLS:    "http://+:8083"
+    ports:
+      - "8083:8083"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8083/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     restart: on-failure
 
   leaderboard-worker:
