@@ -141,20 +141,6 @@ RabbitMQ at-least-once delivery nedeniyle aynı event iki kez gelebilir (retry, 
 - **Centralized auth enforcement** — `IAuthenticatedHandler` marker pattern; auth logic her handler'da ayrı ayrı yazılmadı
 - **Environment-based secrets** — `JWT_SECRET`, DB ve RabbitMQ credential'ları `docker-compose.yml` environment variable'ları olarak geçiyor, kod içinde hardcode yok
 
-### Bilinen Eksiklikler — Üretimde Giderilmeli
-
-Bu eksiklikler case study kapsamında bilinçli olarak ertelendi. Gerçek bir deployment'tan önce aşağıdakilerin mutlaka ele alınması gerekir:
-
-- **Secrets yönetimi** — `JWT_SECRET`, PostgreSQL ve RabbitMQ credential'ları şu an `docker-compose.yml` içinde; üretimde secret manager veya `.env` dosyasına taşınmalı, default değerler startup'ta reddedilmeli
-- **Login brute-force koruması** — `/auth/login` generic IP rate limit paylaşıyor; per-account lockout, şifre karmaşıklık kuralı ve e-posta format validasyonu yok
-- **WebSocket token re-validation** — JWT yalnızca handshake anında doğrulanıyor; socket açık kaldığı sürece süresi dolmuş token erişmeye devam eder. Periyodik re-validation ve `jti` blacklist mekanizması gerekli
-- **Veritabanı constraint eksiklikleri** — `Users.Email` ve `Users.Username` sütunlarında unique index yok (büyük/küçük harf varyantlarıyla duplicate kayıt ve check-then-insert race condition mümkün); `SquadPlayers.PlayerId`'de `Players` tablosuna foreign key yok, `SaveSquadHandler` keyfi player ID ve sınırsız kadro boyutu kabul ediyor
-- **Input validation** — handler'larda pagination cap, kadro kompozisyon kuralı, REST ve WebSocket frame boyut limiti yok
-- **Transport security** — HTTPS enforcement, HSTS ve secure-headers middleware yok; JWT'ler şifreli olmayan bağlantıda clear text taşınıyor
-- **Hata mesajları** — response'larda iç tanımlayıcılar (user ID, player ID) sızıyor; enumeration saldırılarına zemin hazırlıyor
-
----
-
 ## Kullanılan 3. Parti Kütüphaneler
 
 | Kütüphane | Versiyon | Gerekçe |
