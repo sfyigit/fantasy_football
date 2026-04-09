@@ -14,7 +14,8 @@ COPY src/MatchDataIngestion/ src/MatchDataIngestion/
 RUN dotnet publish src/MatchDataIngestion/MatchDataIngestion.csproj \
     -c Release -o /app/publish --no-restore
 
-FROM mcr.microsoft.com/dotnet/runtime:9.0
+FROM mcr.microsoft.com/dotnet/aspnet:9.0
 WORKDIR /app
 COPY --from=build /app/publish .
+EXPOSE 8082
 ENTRYPOINT ["dotnet", "MatchDataIngestion.dll"]

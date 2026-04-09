@@ -155,6 +155,18 @@ Bu eksiklikler case study kapsamında bilinçli olarak ertelendi. Gerçek bir de
 
 ---
 
+## Kullanılan 3. Parti Kütüphaneler
+
+| Kütüphane | Versiyon | Gerekçe |
+|---|---|---|
+| `RabbitMQ.Client` | 7.1.2 | RabbitMQ'nun resmi .NET istemcisi. `IConnectionFactory` + async consumer API ile broker bağlantısı kurmanın standart yolu; alternatifi yok. |
+| `Npgsql.EntityFrameworkCore.PostgreSQL` | 9.0.4 | EF Core'un PostgreSQL provider'ı. Microsoft'un resmi sağladığı provider bulunmuyor; Npgsql, .NET ekosisteminde fiilen standart. |
+| `StackExchange.Redis` | 2.8.41 | Redis istemcisi. `ZADD` / `ZRANK` / `SET NX` gibi Sorted Set ve atomic operasyonlar için en olgun .NET kütüphanesi; Microsoft tarafından da Azure Redis önerilerinde referans gösteriliyor. |
+| `BCrypt.Net-Next` | 4.0.3 | Password hashing. .NET'in built-in `PasswordHasher` PBKDF2 kullanır; BCrypt ile aynı güvenlik seviyesini sunar ancak case study spec'i BCrypt'i açıkça belirttiğinden `BCrypt.Net-Next` seçildi. |
+| `Swashbuckle.AspNetCore` | 7.3.1 | OpenAPI / Swagger UI. `Microsoft.AspNetCore.OpenApi` spec üretir ama UI sağlamaz; Swashbuckle her ikisini birden veriyor ve Bearer token authentication desteği built-in. |
+
+---
+
 ## Gelecek Geliştirmeler
 
 | Konu | Açıklama |
